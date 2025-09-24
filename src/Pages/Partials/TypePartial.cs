@@ -98,7 +98,7 @@ namespace Hangfire.Community.Dashboard.Forms.Partials
                 if (impls.Count == 1)
                 {
                     var implType = impls.First();
-                    inputTMP += $"<div class=\"panel panel-default\"><div class=\"panel-heading\" role=\"button\" data-toggle=\"collapse\" href=\"#collapse_{id}_{implType.Name}\" aria-expanded=\"false\" 	aria-controls=\"collapse_{id}_{implType.Name}\"><h4 class=\"panel-title\">{implType.Name}</h4></div><div id=\"collapse_{id}_{implType.Name}\" class=\"panel-collapse collapse\"><div class=\"panel-body\">";
+					inputTMP += $"<div class=\"panel panel-default\"><div class=\"panel-heading\" role=\"button\" data-toggle=\"collapse\" href=\"#collapse_{id}_{type.Name}\" aria-expanded=\"false\" 	aria-controls=\"collapse_{id}_{type.Name}\"><h4 class=\"panel-title\">{type.Name}</h4></div><div id=\"collapse_{id}_{type.Name}\" class=\"panel-collapse collapse\"><div class=\"panel-body\">";
                     inputTMP += ToHtml(implType, $"{id}_{implType.Name}", displayInfo, listDepth, defaultValue, nAllowedTypes);
                     inputTMP += "</div></div></div>";
                 }
