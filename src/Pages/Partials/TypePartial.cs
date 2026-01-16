@@ -65,9 +65,18 @@ namespace Hangfire.Community.Dashboard.Forms.Partials
 
 			if (type.IsClass && !isGeneric)
 			{
-				if (!nAllowedTypes.Add(type)) { return "<span>Circular reference detected, not allowed.</span>"; } //Circular reference, not allowed -> null
+				if (!nAllowedTypes.Add(type)) { return "<div class=\"hdm-error-message\" role=\"alert\"><span class=\"glyphicon glyphicon-warning-sign\" aria-hidden=\"true\"></span> Circular reference detected, not allowed.</div>"; }
 
-				inputTMP += $"<div class=\"panel panel-default\"><div class=\"panel-heading\" role=\"button\" data-toggle=\"collapse\" href=\"#collapse_{id}\" aria-expanded=\"false\" aria-controls=\"collapse_{id}\"><h4 class=\"panel-title\">{labelText}</h4></div><div id=\"collapse_{id}\" class=\"panel-collapse collapse\"><div class=\"panel-body\">";
+				inputTMP += $@"
+				<section class=""panel panel-default hdm-object-panel"" aria-labelledby=""heading_{id}"">
+					<header class=""panel-heading hdm-object-header"" id=""heading_{id}"" role=""button"" tabindex=""0"" data-toggle=""collapse"" href=""#collapse_{id}"" aria-expanded=""false"" aria-controls=""collapse_{id}"">
+						<h4 class=""panel-title hdm-object-title"">
+							<span class=""glyphicon glyphicon-th-list hdm-object-icon"" aria-hidden=""true""></span>
+							{System.Net.WebUtility.HtmlEncode(labelText)}
+						</h4>
+					</header>
+					<div id=""collapse_{id}"" class=""panel-collapse collapse"" role=""region"" aria-labelledby=""heading_{id}"">
+						<div class=""panel-body hdm-object-body"">";
 
 				foreach (var propertyInfo in type.GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(DisplayDataAttribute))))
 				{
@@ -81,27 +90,42 @@ namespace Hangfire.Community.Dashboard.Forms.Partials
 
 				nAllowedTypes.Remove(type);
 
-				return inputTMP += "</div></div></div>";
+				return inputTMP += @"
+						</div>
+					</div>
+				</section>";
 			}
 
 			if (type.IsInterface)
 			{
-				if (!VT.Implementations.ContainsKey(type)) { return $"<span>No concrete implementation of \"{type.Name}\" found in the current assembly.</span>"; }
+				if (!VT.Implementations.ContainsKey(type)) { return $"<div class=\"hdm-error-message\" role=\"alert\"><span class=\"glyphicon glyphicon-warning-sign\" aria-hidden=\"true\"></span> No concrete implementation of \"{System.Net.WebUtility.HtmlEncode(type.Name)}\" found in the current assembly.</div>"; }
 
 				var impls = VT.Implementations[type];
 
 				if (impls == null || impls.Count < 1)
 				{
-					return $"<span>No concrete implementation of \"{type.Name}\" found in the current assembly.</span>";
+					return $"<div class=\"hdm-error-message\" role=\"alert\"><span class=\"glyphicon glyphicon-warning-sign\" aria-hidden=\"true\"></span> No concrete implementation of \"{System.Net.WebUtility.HtmlEncode(type.Name)}\" found in the current assembly.</div>";
 				}
 
 				if (impls.Count == 1)
 				{
 					var implType = impls.First();
 					var implDisplayName = VT.GetDisplayName(implType);
-					inputTMP += $"<div class=\"panel panel-default\"><div class=\"panel-heading\" role=\"button\" data-toggle=\"collapse\" href=\"#collapse_{id}_{type.Name}\" aria-expanded=\"false\" 	aria-controls=\"collapse_{id}_{type.Name}\"><h4 class=\"panel-title\">{implDisplayName}</h4></div><div id=\"collapse_{id}_{type.Name}\" class=\"panel-collapse collapse\"><div class=\"panel-body\">";
+					inputTMP += $@"
+					<section class=""panel panel-default hdm-impl-panel"" aria-labelledby=""heading_{id}_{type.Name}"">
+						<header class=""panel-heading hdm-impl-header"" id=""heading_{id}_{type.Name}"" role=""button"" tabindex=""0"" data-toggle=""collapse"" href=""#collapse_{id}_{type.Name}"" aria-expanded=""false"" aria-controls=""collapse_{id}_{type.Name}"">
+							<h4 class=""panel-title hdm-impl-title"">
+								<span class=""glyphicon glyphicon-cog hdm-impl-icon"" aria-hidden=""true""></span>
+								{System.Net.WebUtility.HtmlEncode(implDisplayName)}
+							</h4>
+						</header>
+						<div id=""collapse_{id}_{type.Name}"" class=""panel-collapse collapse"" role=""region"" aria-labelledby=""heading_{id}_{type.Name}"">
+							<div class=""panel-body hdm-impl-body"">";
 					inputTMP += ToHtml(implType, $"{id}_{implType.Name}", displayInfo, listDepth, defaultValue, nAllowedTypes);
-					inputTMP += "</div></div></div>";
+					inputTMP += @"
+							</div>
+						</div>
+					</section>";
 					return inputTMP;
 				}
 				else
@@ -114,9 +138,9 @@ namespace Hangfire.Community.Dashboard.Forms.Partials
 					if (defaultImplType != null)
 					{
 						var defaultImplDisplayName = VT.GetDisplayName(defaultImplType);
-						if (!type.IsAssignableFrom(defaultImplType)) { return $"<span>Default type \"{defaultImplDisplayName}\" does not implement interface \"{type.Name}\".</span>"; }
-						if (!impls.Contains(defaultImplType)) { return $"<span>Default type \"{defaultImplDisplayName}\" is not in the list of implementations.</span>"; }
-						if (!filteredImpls.Contains(defaultImplType)) { return $"<span>Default type \"{defaultImplDisplayName}\" creates a circular reference and is not allowed.</span>"; }
+						if (!type.IsAssignableFrom(defaultImplType)) { return $"<div class=\"hdm-error-message\" role=\"alert\"><span class=\"glyphicon glyphicon-warning-sign\" aria-hidden=\"true\"></span> Default type \"{System.Net.WebUtility.HtmlEncode(defaultImplDisplayName)}\" does not implement interface \"{System.Net.WebUtility.HtmlEncode(type.Name)}\".</div>"; }
+						if (!impls.Contains(defaultImplType)) { return $"<div class=\"hdm-error-message\" role=\"alert\"><span class=\"glyphicon glyphicon-warning-sign\" aria-hidden=\"true\"></span> Default type \"{System.Net.WebUtility.HtmlEncode(defaultImplDisplayName)}\" is not in the list of implementations.</div>"; }
+						if (!filteredImpls.Contains(defaultImplType)) { return $"<div class=\"hdm-error-message\" role=\"alert\"><span class=\"glyphicon glyphicon-warning-sign\" aria-hidden=\"true\"></span> Default type \"{System.Net.WebUtility.HtmlEncode(defaultImplDisplayName)}\" creates a circular reference and is not allowed.</div>"; }
 					}
 
 					inputTMP += FormPartial.InputImplsMenu(id, displayInfo.CssClasses, labelText, displayInfo.Placeholder, displayInfo.Description, filteredImpls, defaultImplType, displayInfo.IsDisabled, displayInfo.IsRequired);
@@ -124,12 +148,22 @@ namespace Hangfire.Community.Dashboard.Forms.Partials
 					//Concrete
 					foreach (Type impl in filteredImpls)
 					{
-						if (!nAllowedTypes.Add(impl)) { return "<span>Circular reference detected, not allowed.</span>"; } //Circular reference, not allowed -> null
+						if (!nAllowedTypes.Add(impl)) { return "<div class=\"hdm-error-message\" role=\"alert\"><span class=\"glyphicon glyphicon-warning-sign\" aria-hidden=\"true\"></span> Circular reference detected, not allowed.</div>"; }
 
 						var dNone = impl.IsEquivalentTo(defaultImplType) ? "" : "d-none";
 						var implDisplayName = VT.GetDisplayName(impl);
 
-						inputTMP += $"<div id=\"{id}_{impl.Name}\" class=\"panel panel-default impl-panels-for-{id} {dNone}\"><div class=\"panel-heading\" role=\"button\" data-toggle=\"collapse\" href=\"#collapse_{id}_{impl.Name}\" aria-expanded=\"false\" aria-controls=\"collapse_{id}_{impl.Name}\"><h4 class=\"panel-title\">{implDisplayName} | {type.Name}</h4></div><div id=\"collapse_{id}_{impl.Name}\" 	class=\"panel-collapse collapse\"><div 	class=\"panel-body\">";
+						inputTMP += $@"
+						<section id=""{id}_{impl.Name}"" class=""panel panel-default impl-panels-for-{id} hdm-impl-panel {dNone}"" aria-labelledby=""heading_{id}_{impl.Name}"">
+							<header class=""panel-heading hdm-impl-header"" id=""heading_{id}_{impl.Name}"" role=""button"" tabindex=""0"" data-toggle=""collapse"" href=""#collapse_{id}_{impl.Name}"" aria-expanded=""false"" aria-controls=""collapse_{id}_{impl.Name}"">
+								<h4 class=""panel-title hdm-impl-title"">
+									<span class=""glyphicon glyphicon-cog hdm-impl-icon"" aria-hidden=""true""></span>
+									{System.Net.WebUtility.HtmlEncode(implDisplayName)}
+									<span class=""hdm-interface-badge"">{System.Net.WebUtility.HtmlEncode(type.Name)}</span>
+								</h4>
+							</header>
+							<div id=""collapse_{id}_{impl.Name}"" class=""panel-collapse collapse"" role=""region"" aria-labelledby=""heading_{id}_{impl.Name}"">
+								<div class=""panel-body hdm-impl-body"">";
 
 						foreach (var propertyInfo in impl.GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(DisplayDataAttribute))))
 						{
@@ -143,7 +177,10 @@ namespace Hangfire.Community.Dashboard.Forms.Partials
 
 						nAllowedTypes.Remove(impl);
 
-						inputTMP += "</div></div></div>";
+						inputTMP += @"
+								</div>
+							</div>
+						</section>";
 					}
 
 					return inputTMP;
@@ -235,7 +272,7 @@ namespace Hangfire.Community.Dashboard.Forms.Partials
 
 			}
 
-			return "<span>Unsupported type or not implemented yet.</span>";
+			return "<div class=\"hdm-error-message\" role=\"alert\"><span class=\"glyphicon glyphicon-warning-sign\" aria-hidden=\"true\"></span> Unsupported type or not implemented yet.</div>";
 		}
 	}
 }
