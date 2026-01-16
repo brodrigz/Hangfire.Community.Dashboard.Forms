@@ -4,9 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-
 using Hangfire.Community.Dashboard.Forms.Metadata;
-using Hangfire.Dashboard.Management.v2.Metadata;
 
 namespace Hangfire.Community.Dashboard.Forms.Support
 {

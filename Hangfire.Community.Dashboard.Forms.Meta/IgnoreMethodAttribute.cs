@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Hangfire.Dashboard.Management.v2.Metadata
+namespace Hangfire.Community.Dashboard.Forms.Metadata
 {
 
 	[AttributeUsage(AttributeTargets.Method)]
