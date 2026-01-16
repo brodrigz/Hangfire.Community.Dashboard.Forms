@@ -135,7 +135,7 @@ WriteLiteral("\r\n");
             #line 20 "..\..\Pages\Partials\PanelPartial.cshtml"
  foreach (var job in Jobs)
 {
-    var id = $"{SectionName}_{job.MethodName.ScrubURL()}";
+    var id = $"{SectionName}_{job.MethodName.SanitizeHtmlId()}";
     var expanded = Jobs.First() == job;
 
     var options = new JObject();
@@ -209,12 +209,12 @@ WriteLiteral("\" class=\"panel-heading card-header ");
             
             #line default
             #line hidden
-WriteLiteral(" collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"");
+WriteLiteral("\" role=\"button\" data-toggle=\"collapse\" data-target=\"");
 
 
             
             #line 53 "..\..\Pages\Partials\PanelPartial.cshtml"
-                                                                                                                                                                   Write($"#collapse_{id}");
+                                                                                                                                       Write($"#collapse_{id}");
 
             
             #line default
@@ -224,7 +224,7 @@ WriteLiteral("\" aria-expanded=\"");
 
             
             #line 53 "..\..\Pages\Partials\PanelPartial.cshtml"
-                                                                                                                                                                                                       Write(ariaExpanded);
+                                                                                                                                                                           Write(ariaExpanded);
 
             
             #line default
@@ -234,7 +234,7 @@ WriteLiteral("\" aria-controls=\"");
 
             
             #line 53 "..\..\Pages\Partials\PanelPartial.cshtml"
-                                                                                                                                                                                                                                      Write($"collapse_{id}");
+                                                                                                                                                                                                          Write($"collapse_{id}");
 
             
             #line default
@@ -289,8 +289,7 @@ WriteLiteral("\" aria-labelledby=\"");
             
             #line default
             #line hidden
-WriteLiteral("\" data-parent=\"#jobsAccordion\">\r\n            <div class=\"panel-body\">\r\n          " +
-"      <p>");
+WriteLiteral("\">\r\n            <div class=\"panel-body\">\r\n                <p>");
 
 
             
@@ -312,12 +311,12 @@ WriteLiteral("</p>\r\n");
             #line default
             #line hidden
 WriteLiteral("                    <div class=\"well hdm-show-metadata\">\r\n                       " +
-" <div class=\"col-xs-1\" role=\"button\" data-toggle=\"collapse\" href=\"");
+" <div class=\"col-xs-1\" role=\"button\" data-toggle=\"collapse\" data-target=\"");
 
 
             
             #line 64 "..\..\Pages\Partials\PanelPartial.cshtml"
-                                                                                     Write($"#options_collapse_{id}");
+                                                                                            Write($"#options_collapse_{id}");
 
             
             #line default
@@ -327,7 +326,7 @@ WriteLiteral("\" aria-expanded=\"false\" aria-controls=\"");
 
             
             #line 64 "..\..\Pages\Partials\PanelPartial.cshtml"
-                                                                                                                                                        Write($"options_collapse_{id}");
+                                                                                                                                                               Write($"options_collapse_{id}");
 
             
             #line default

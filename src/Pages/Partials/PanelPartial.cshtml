@@ -19,7 +19,7 @@
 
 @foreach (var job in Jobs)
 {
-    var id = $"{SectionName}_{job.MethodName.ScrubURL()}";
+    var id = $"{SectionName}_{job.MethodName.SanitizeHtmlId()}";
     var expanded = Jobs.First() == job;
 
     var options = new JObject();
@@ -50,18 +50,18 @@
     var multiAllowed = job.AllowMultiple ? "hdm-multi-allowed" : "";
 
     <div class="panel panel-info hdm-management hdm-job-panel card @multiAllowed" data-id="@id">
-        <div id="@($"heading_{id}")" class="panel-heading card-header @headingCollapsed collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="@($"#collapse_{id}")" aria-expanded="@ariaExpanded" aria-controls="@($"collapse_{id}")">
+        <div id="@($"heading_{id}")" class="panel-heading card-header @headingCollapsed" role="button" data-toggle="collapse" data-target="@($"#collapse_{id}")" aria-expanded="@ariaExpanded" aria-controls="@($"collapse_{id}")">
             <h4 class="panel-title">
                 @job.Name
             </h4>
         </div>
-        <div id="@($"collapse_{id}")" class="panel-collapse @panelCollapsed hdm-job-container" aria-expanded="@ariaExpanded" aria-labelledby="@($"heading_{id}")" data-parent="#jobsAccordion">
+        <div id="@($"collapse_{id}")" class="panel-collapse @panelCollapsed hdm-job-container" aria-expanded="@ariaExpanded" aria-labelledby="@($"heading_{id}")">
             <div class="panel-body">
                 <p>@job.Description</p>
                 @if (showMeta)
                 {
                     <div class="well hdm-show-metadata">
-                        <div class="col-xs-1" role="button" data-toggle="collapse" href="@($"#options_collapse_{id}")" aria-expanded="false" aria-controls="@($"options_collapse_{id}")" title="Click to show metadata for this job.">
+                        <div class="col-xs-1" role="button" data-toggle="collapse" data-target="@($"#options_collapse_{id}")" aria-expanded="false" aria-controls="@($"options_collapse_{id}")" title="Click to show metadata for this job.">
                             <span class="glyphicon glyphicon-info-sign"></span>
                         </div>
                         <pre class="col-xs-11 collapse" aria-expanded="false" id="@($"options_collapse_{id}")">@JsonConvert.SerializeObject(options, Formatting.Indented)</pre>

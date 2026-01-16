@@ -97,7 +97,7 @@ WriteLiteral("\r\n\t</div>\r\n\t<div class=\"col-md-9 accordion job-panels\">\r\
             #line 19 "..\..\Pages\ManagementBasePage.cshtml"
  		foreach (var sectionKey in jobSections.Keys)
 		{
-			var scrubbedSection = sectionKey.ScrubURL();
+			var scrubbedSection = sectionKey.SanitizeHtmlId();
 			var expanded = jobSections.Keys.First() == sectionKey;
 
 			var headingCollapsed = expanded ? "" : "collapsed";
@@ -141,12 +141,12 @@ WriteLiteral("\" class=\"panel-heading card-header ");
             
             #line default
             #line hidden
-WriteLiteral(" collapsed\" role=\"button\" data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"");
+WriteLiteral("\" role=\"button\" data-toggle=\"collapse\" data-target=\"");
 
 
             
             #line 32 "..\..\Pages\ManagementBasePage.cshtml"
-                                                                                                                                                                                     Write($"#section_collapse_{scrubbedSection}");
+                                                                                                                                                         Write($"#section_collapse_{scrubbedSection}");
 
             
             #line default
@@ -156,7 +156,7 @@ WriteLiteral("\" aria-expanded=\"");
 
             
             #line 32 "..\..\Pages\ManagementBasePage.cshtml"
-                                                                                                                                                                                                                                              Write(ariaExpaneded);
+                                                                                                                                                                                                                  Write(ariaExpaneded);
 
             
             #line default
@@ -166,7 +166,7 @@ WriteLiteral("\" aria-controls=\"");
 
             
             #line 32 "..\..\Pages\ManagementBasePage.cshtml"
-                                                                                                                                                                                                                                                                              Write($"section_collapse_{scrubbedSection}");
+                                                                                                                                                                                                                                                  Write($"section_collapse_{scrubbedSection}");
 
             
             #line default
@@ -221,7 +221,7 @@ WriteLiteral("\" aria-labelledby=\"");
             
             #line default
             #line hidden
-WriteLiteral("\" data-parent=\"#jobsAccordion\">\r\n                        ");
+WriteLiteral("\">\r\n                        ");
 
 
             
@@ -297,7 +297,7 @@ WriteLiteral("\" aria-labelledby=\"");
             
             #line default
             #line hidden
-WriteLiteral("\" data-parent=\"#jobsAccordion\">\r\n                    ");
+WriteLiteral("\">\r\n                    ");
 
 
             

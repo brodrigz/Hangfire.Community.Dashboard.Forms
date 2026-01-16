@@ -35,7 +35,7 @@ namespace Hangfire.Community.Dashboard.Forms.Pages
 			
 			foreach (var jobMetadata in jobs)
 			{
-				var route = $"{ManagementPage.UrlRoute}/{jobMetadata.JobId.ScrubURL()}";
+				var route = $"{ManagementPage.UrlRoute}/{jobMetadata.JobId.SanitizeHtmlId()}";
 
 				//POST
 				DashboardRoutes.Routes.Add(route, new CommandWithResponseDispatcher(context => {

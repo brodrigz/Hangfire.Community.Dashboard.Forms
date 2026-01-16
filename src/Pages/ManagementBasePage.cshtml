@@ -18,7 +18,7 @@
 	<div class="col-md-9 accordion job-panels">
 		@foreach (var sectionKey in jobSections.Keys)
 		{
-			var scrubbedSection = sectionKey.ScrubURL();
+			var scrubbedSection = sectionKey.SanitizeHtmlId();
 			var expanded = jobSections.Keys.First() == sectionKey;
 
 			var headingCollapsed = expanded ? "" : "collapsed";
@@ -29,10 +29,10 @@
 			{
 
 				<div class="panel panel-success card wrapper-panel" data-id="@($"section_{scrubbedSection}")">
-					<div id="@($"section_heading_{scrubbedSection}")" class="panel-heading card-header @headingCollapsed collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="@($"#section_collapse_{scrubbedSection}")" aria-expanded="@ariaExpaneded" aria-controls="@($"section_collapse_{scrubbedSection}")">
+					<div id="@($"section_heading_{scrubbedSection}")" class="panel-heading card-header @headingCollapsed" role="button" data-toggle="collapse" data-target="@($"#section_collapse_{scrubbedSection}")" aria-expanded="@ariaExpaneded" aria-controls="@($"section_collapse_{scrubbedSection}")">
 						<h4 class="panel-title">@sectionKey</h4>
 					</div>
-					<div id="@($"section_collapse_{scrubbedSection}")" class="panel-collapse @panelCollapsed" aria-expanded="@ariaExpaneded" aria-labelledby="@($"section_heading_{scrubbedSection}")" data-parent="#jobsAccordion">
+					<div id="@($"section_collapse_{scrubbedSection}")" class="panel-collapse @panelCollapsed" aria-expanded="@ariaExpaneded" aria-labelledby="@($"section_heading_{scrubbedSection}")">
                         @Html.RenderPartial(new Partials.PanelPartial(scrubbedSection, jobs.Where(j => j.SectionTitle == sectionKey).ToList()))
 					</div>
 				</div>
@@ -40,7 +40,7 @@
 			else
 			{
 				<h1 class="page-header single-section">@sectionKey</h1>
-				<div id="@($"section_collapse_{scrubbedSection}")" class="panel-collapse @panelCollapsed" aria-expanded="@ariaExpaneded" aria-labelledby="@($"section_heading_{scrubbedSection}")" data-parent="#jobsAccordion">
+				<div id="@($"section_collapse_{scrubbedSection}")" class="panel-collapse @panelCollapsed" aria-expanded="@ariaExpaneded" aria-labelledby="@($"section_heading_{scrubbedSection}")">
                     @Html.RenderPartial(new Partials.PanelPartial(scrubbedSection, jobs.Where(j => j.SectionTitle == sectionKey).ToList()))
 				</div>
 			}
