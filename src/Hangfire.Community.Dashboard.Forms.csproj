@@ -73,6 +73,11 @@
 		</PackageReference>
 	</ItemGroup>
 
+	<Target Name="NpmInstall" BeforeTargets="CopyContentFiles" Condition="!Exists('$(MSBuildProjectDirectory)\node_modules')">
+		<Message Text="Running npm install to restore client-side dependencies..." Importance="high" />
+		<Exec Command="npm install" WorkingDirectory="$(MSBuildProjectDirectory)" />
+	</Target>
+
 	<Target Name="CopyContentFiles" BeforeTargets="ResolveReferences">
 		<ItemGroup>
 			<ClientResourceFilesHDM Include="$(MSBuildProjectDirectory)\Content\management.*;$(MSBuildProjectDirectory)\Content\jsm-init.js">
