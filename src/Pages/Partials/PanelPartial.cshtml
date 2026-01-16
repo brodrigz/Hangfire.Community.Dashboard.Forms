@@ -14,7 +14,8 @@
 @using Newtonsoft.Json.Linq;
 @inherits Hangfire.Dashboard.RazorPage
 @{
-
+	// Load job history now that Context is available
+	EnsureHistoryLoaded();
 }
 
 @foreach (var job in Jobs)

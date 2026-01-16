@@ -1,4 +1,4 @@
-(function (hangfire) {
+﻿(function (hangfire) {
 
 	hangfire.Management = (function () {
 		function Management() {
@@ -86,7 +86,9 @@
 			}
 
 			$('.load-history-btn').on('click', function () {
-				var $dropdown = $(this).closest('.job-history').find('.job-history-dropdown');
+				// Find the dropdown within the same fieldset/input-group container
+				var $container = $(this).closest('.hdm-history-fieldset');
+				var $dropdown = $container.find('.job-history-dropdown');
 				var selectedId = $dropdown.val();
 
 				if (!selectedId) {
