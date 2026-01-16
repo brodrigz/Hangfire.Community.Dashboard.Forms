@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using Hangfire.Community.Dashboard.Forms.Support;
 
 namespace Hangfire.Community.Dashboard.Forms.Pages.Partials
 {
@@ -152,7 +153,7 @@ namespace Hangfire.Community.Dashboard.Forms.Pages.Partials
             {
                 var defaultType = impls.FirstOrDefault(impl => impl == defaultValue);
                 initValue = defaultType.FullName;
-                initText = defaultType.Name;
+                initText = VT.GetDisplayName(defaultType);
             }
 
             var output = $@"
@@ -167,7 +168,8 @@ namespace Hangfire.Community.Dashboard.Forms.Pages.Partials
                     foreach (var impl in impls)
                     {
                         var targetPanelId = $"{id}_{impl.Name}";
-                        output += $@"<li><a class=""option"" data-optiontext=""{impl.Name}"" data-optionvalue=""{impl.FullName}"" data-target-panel-id=""{targetPanelId}"">{impl.Name}</a></li>";
+                        var displayName = VT.GetDisplayName(impl);
+                        output += $@"<li><a class=""option"" data-optiontext=""{displayName}"" data-optionvalue=""{impl.FullName}"" data-target-panel-id=""{targetPanelId}"">{displayName}</a></li>";
                     }
 
             output += $@"</ul>

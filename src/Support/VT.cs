@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
@@ -17,6 +18,15 @@ namespace Hangfire.Community.Dashboard.Forms.Support
 		internal static void SetAllImplementations(Assembly assembly)
 		{
 			JobsHelper.Metadata.ForEach(job => job.MethodInfo.GetParameters().ToList().ForEach(param => RegisterInterfaceImpls(assembly, param.ParameterType)));
+		}
+
+		// Gets the display name for a type, checking for [DisplayName] attribute first, then falling back to Type.Name
+		public static string GetDisplayName(Type type)
+		{
+			if (type == null) return string.Empty;
+
+			var displayNameAttr = type.GetCustomAttribute<DisplayNameAttribute>();
+			return displayNameAttr?.DisplayName ?? type.Name;
 		}
 
 		// it get all interfaces from a type, including generic parameters interfaces.

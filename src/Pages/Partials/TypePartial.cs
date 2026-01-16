@@ -98,7 +98,8 @@ namespace Hangfire.Community.Dashboard.Forms.Partials
 				if (impls.Count == 1)
 				{
 					var implType = impls.First();
-					inputTMP += $"<div class=\"panel panel-default\"><div class=\"panel-heading\" role=\"button\" data-toggle=\"collapse\" href=\"#collapse_{id}_{type.Name}\" aria-expanded=\"false\" 	aria-controls=\"collapse_{id}_{type.Name}\"><h4 class=\"panel-title\">{type.Name}</h4></div><div id=\"collapse_{id}_{type.Name}\" class=\"panel-collapse collapse\"><div class=\"panel-body\">";
+					var implDisplayName = VT.GetDisplayName(implType);
+					inputTMP += $"<div class=\"panel panel-default\"><div class=\"panel-heading\" role=\"button\" data-toggle=\"collapse\" href=\"#collapse_{id}_{type.Name}\" aria-expanded=\"false\" 	aria-controls=\"collapse_{id}_{type.Name}\"><h4 class=\"panel-title\">{implDisplayName}</h4></div><div id=\"collapse_{id}_{type.Name}\" class=\"panel-collapse collapse\"><div class=\"panel-body\">";
 					inputTMP += ToHtml(implType, $"{id}_{implType.Name}", displayInfo, listDepth, defaultValue, nAllowedTypes);
 					inputTMP += "</div></div></div>";
 					return inputTMP;
@@ -112,9 +113,10 @@ namespace Hangfire.Community.Dashboard.Forms.Partials
 
 					if (defaultImplType != null)
 					{
-						if (!type.IsAssignableFrom(defaultImplType)) { return $"<span>Default type \"{defaultImplType.Name}\" does not implement interface \"{type.Name}\".</span>"; }
-						if (!impls.Contains(defaultImplType)) { return $"<span>Default type \"{defaultImplType.Name}\" is not in the list of implementations.</span>"; }
-						if (!filteredImpls.Contains(defaultImplType)) { return $"<span>Default type \"{defaultImplType.Name}\" creates a circular reference and is not allowed.</span>"; }
+						var defaultImplDisplayName = VT.GetDisplayName(defaultImplType);
+						if (!type.IsAssignableFrom(defaultImplType)) { return $"<span>Default type \"{defaultImplDisplayName}\" does not implement interface \"{type.Name}\".</span>"; }
+						if (!impls.Contains(defaultImplType)) { return $"<span>Default type \"{defaultImplDisplayName}\" is not in the list of implementations.</span>"; }
+						if (!filteredImpls.Contains(defaultImplType)) { return $"<span>Default type \"{defaultImplDisplayName}\" creates a circular reference and is not allowed.</span>"; }
 					}
 
 					inputTMP += FormPartial.InputImplsMenu(id, displayInfo.CssClasses, labelText, displayInfo.Placeholder, displayInfo.Description, filteredImpls, defaultImplType, displayInfo.IsDisabled, displayInfo.IsRequired);
@@ -125,8 +127,9 @@ namespace Hangfire.Community.Dashboard.Forms.Partials
 						if (!nAllowedTypes.Add(impl)) { return "<span>Circular reference detected, not allowed.</span>"; } //Circular reference, not allowed -> null
 
 						var dNone = impl.IsEquivalentTo(defaultImplType) ? "" : "d-none";
+						var implDisplayName = VT.GetDisplayName(impl);
 
-						inputTMP += $"<div id=\"{id}_{impl.Name}\" class=\"panel panel-default impl-panels-for-{id} {dNone}\"><div class=\"panel-heading\" role=\"button\" data-toggle=\"collapse\" href=\"#collapse_{id}_{impl.Name}\" aria-expanded=\"false\" aria-controls=\"collapse_{id}_{impl.Name}\"><h4 class=\"panel-title\">{impl.Name} | {type.Name}</h4></div><div id=\"collapse_{id}_{impl.Name}\" 	class=\"panel-collapse collapse\"><div 	class=\"panel-body\">";
+						inputTMP += $"<div id=\"{id}_{impl.Name}\" class=\"panel panel-default impl-panels-for-{id} {dNone}\"><div class=\"panel-heading\" role=\"button\" data-toggle=\"collapse\" href=\"#collapse_{id}_{impl.Name}\" aria-expanded=\"false\" aria-controls=\"collapse_{id}_{impl.Name}\"><h4 class=\"panel-title\">{implDisplayName} | {type.Name}</h4></div><div id=\"collapse_{id}_{impl.Name}\" 	class=\"panel-collapse collapse\"><div 	class=\"panel-body\">";
 
 						foreach (var propertyInfo in impl.GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(DisplayDataAttribute))))
 						{
