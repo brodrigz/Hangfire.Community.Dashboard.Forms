@@ -37,7 +37,7 @@
 
 						td = new tempusDominus.TempusDominus(this);
 
-						if (options) {
+						if (options && typeof options === 'object' && Object.keys(options).length > 0) {
 							//console.log('Found Options: ', options)
 							if (options.localization) {
 								//console.log('Old Localization: ', options.localization);

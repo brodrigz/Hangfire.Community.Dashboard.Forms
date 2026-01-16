@@ -90,9 +90,20 @@ namespace Hangfire.Community.Dashboard.Forms.Pages.Partials
 
         public static string InputDateTime(string id, string cssClasses, string labelText, string placeholderText, string descriptionText, object defaultValue = null, bool isDisabled = false, bool isRequired = false, string controlConfig = "")
         {
+            string tdOptionsAttr = "";
             if (!string.IsNullOrWhiteSpace(controlConfig))
             {
-                controlConfig = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(controlConfig), Formatting.None);
+                try
+                {
+                    var deserializedConfig = JsonConvert.DeserializeObject(controlConfig);
+                    var serializedConfig = JsonConvert.SerializeObject(deserializedConfig, Formatting.None);
+                    tdOptionsAttr = $"data-td_options=\"{serializedConfig}\"";
+                }
+                catch
+                {
+                    // If deserialization fails, don't add the attribute
+                    tdOptionsAttr = "";
+                }
             }
 
             var requiredAttr = isRequired ? "required=\"required\" aria-required=\"true\"" : "";
@@ -102,7 +113,7 @@ namespace Hangfire.Community.Dashboard.Forms.Pages.Partials
             return $@"
             <div class=""form-group hdm-form-group {cssClasses} {(isRequired ? "required" : "")}"">
                 <label for=""{id}_input"" class=""control-label hdm-label"">{labelText}</label>
-                <div class=""hdm-job-input-container hdm-input-date-container input-group date"" id=""{id}_datetimepicker"" data-td_options=""{controlConfig}"" data-td_value=""{(defaultValue is DateTime dt ? dt.ToString("O") : defaultValue ?? "")}"">
+                <div class=""hdm-job-input-container hdm-input-date-container input-group date"" id=""{id}_datetimepicker"" {tdOptionsAttr} data-td_value=""{(defaultValue is DateTime dt ? dt.ToString("O") : defaultValue ?? "")}"">
                     <input type=""text"" id=""{id}_input"" class=""hdm-job-input hdm-input-date form-control"" placeholder=""{placeholderText}"" {disabledAttr} {requiredAttr} {describedBy} />
                     <span class=""input-group-addon"" aria-hidden=""true"">
                         <span class=""glyphicon glyphicon-calendar""></span>
