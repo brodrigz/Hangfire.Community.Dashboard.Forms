@@ -20,15 +20,6 @@ namespace Hangfire.Community.Dashboard.Forms.Support
 			JobsHelper.Metadata.ForEach(job => job.MethodInfo.GetParameters().ToList().ForEach(param => RegisterInterfaceImpls(assembly, param.ParameterType)));
 		}
 
-		// Gets the display name for a type, checking for [DisplayName] attribute first, then falling back to Type.Name
-		public static string GetDisplayName(Type type)
-		{
-			if (type == null) return string.Empty;
-
-			var displayNameAttr = type.GetCustomAttribute<DisplayNameAttribute>();
-			return displayNameAttr?.DisplayName ?? type.Name;
-		}
-
 		// it get all interfaces from a type, including generic parameters interfaces.
 		private static List<Type> GetGenericParamInterface(Type parameterType)
 		{
@@ -108,5 +99,13 @@ namespace Hangfire.Community.Dashboard.Forms.Support
 		// gets all concrete impls of given interface
 		private static IEnumerable<Type> GetInterfaceImplementations(Assembly assembly, Type interfaceType) =>
 			assembly.GetTypes().Where(t => interfaceType.IsAssignableFrom(t) && !t.IsInterface);
+
+		public static string GetDisplayName(Type type)
+		{
+			if (type == null) return string.Empty;
+
+			var displayNameAttr = type.GetCustomAttribute<DisplayNameAttribute>();
+			return displayNameAttr?.DisplayName ?? type.Name;
+		}
 	}
 }
